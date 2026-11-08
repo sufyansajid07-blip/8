@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madam's Horror Birthday Countdown</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:#f7eeee; font-family:Georgia,serif;
+    background:radial-gradient(ellipse at center,#321018 0%,#10070b 55%,#030204 100%);
+    overflow-x:hidden; display:flex; align-items:center; justify-content:center;
+  }
+  .fog{position:fixed;inset:-30%;pointer-events:none;opacity:.14;
+    background:linear-gradient(110deg,transparent 20%,#b8a5a5 45%,transparent 65%);
+    filter:blur(35px);animation:fog 18s linear infinite}
+  @keyframes fog{from{transform:translateX(-35%) rotate(-8deg)}to{transform:translateX(35%) rotate(-8deg)}}
+  .wrap{width:min(920px,94vw);text-align:center;padding:38px 18px;position:relative;z-index:1}
+  .eyebrow{letter-spacing:5px;text-transform:uppercase;color:#c9a6a6;font-size:.8rem}
+  h1{font-size:clamp(2.3rem,7vw,5rem);margin:14px 0;color:#f3dede;text-shadow:0 0 18px #9e142d}
+  .subtitle{color:#cdbebe;font-size:1.1rem}
+  .calendar{margin:28px auto 18px;max-width:340px;border:1px solid #6d2937;background:#130a0e;
+    box-shadow:0 0 28px #4b071b;border-radius:12px;overflow:hidden}
+  .cal-head{background:#68152a;padding:13px;font-size:1.2rem;letter-spacing:2px}
+  .cal-body{padding:18px}
+  .date{font-size:4.2rem;font-weight:bold;color:#fff}
+  .date-label{letter-spacing:3px;color:#c9a6a6}
+  .countdown{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0}
+  .unit{background:#160b10;border:1px solid #55202d;border-radius:10px;padding:15px 22px;min-width:105px}
+  .num{display:block;font-size:2.5rem;color:#f3c7cf}
+  .unit small{letter-spacing:2px;color:#b99da3}
+  button{cursor:pointer;border:1px solid #a54b60;background:#4b1020;color:#fff;padding:12px 18px;
+    border-radius:30px;margin:6px;font-size:1rem}
+  button:hover{background:#751c35}
+  .reveal{margin:28px auto 15px;max-width:520px;display:none;animation:appear 1.2s ease}
+  .reveal.show{display:block}
+  @keyframes appear{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+  .reveal img{width:100%;max-height:520px;object-fit:contain;border-radius:10px;
+    border:1px solid #8b354b;box-shadow:0 0 35px #8d102d}
+  .reveal h2{font-size:2rem;color:#f0cbd2;text-shadow:0 0 12px #d20d3d}
+  .note{font-size:.85rem;color:#a9949a;margin-top:22px}
+  #status{color:#d9b7bf;min-height:1.4em}
+</style>
+</head>
+<body>
+<div class="fog"></div>
+<main class="wrap">
+  <div class="eyebrow">A little spooky birthday surprise</div>
+  <h1>Madam's Birthday</h1>
+  <p class="subtitle">The night is counting down… until <strong>28 November</strong>.</p>
+
+  <section class="calendar" aria-label="Birthday calendar">
+    <div class="cal-head">NOVEMBER • 2026</div>
+    <div class="cal-body">
+      <div class="date" id="day">08</div>
+      <div class="date-label">NOVEMBER</div>
+      <p id="calendarText">One day closer…</p>
+    </div>
+  </section>
+
+  <div class="countdown" aria-label="Countdown">
+    <div class="unit"><span class="num" id="days">20</span><small>DAYS</small></div>
+    <div class="unit"><span class="num" id="hours">00</span><small>HOURS</small></div>
+    <div class="unit"><span class="num" id="minutes">00</span><small>MINUTES</small></div>
+    <div class="unit"><span class="num" id="seconds">00</span><small>SECONDS</small></div>
+  </div>
+
+  <button id="revealBtn">🕯️ Open the spooky surprise</button>
+  <button id="soundBtn">🔊 Sound On</button>
+  <p id="status">Click the surprise button when you're ready…</p>
+
+  <div class="reveal" id="reveal">
+    <h2>Behind you… 👻</h2>
+    <!-- Replace nun.jpg with your exact Nun image filename in the same GitHub folder. -->
+    <img src="nun.jpg" alt="The Nun horror surprise" onerror="this.style.display='none';document.getElementById('imgHelp').style.display='block'">
+    <p id="imgHelp" style="display:none;color:#ffb6c4">Upload your Nun image to this repository as <b>nun.jpg</b> (same folder as this HTML).</p>
+    <h2>Getting closer to your birthday…</h2>
+  </div>
+  <p class="note">Birthday: 28 November • Horror surprise website</p>
+</main>
+
+<audio id="ambient" loop preload="auto">
+  <!-- Add a royalty-free creepy ambient audio file named horror-ambient.mp3 beside this HTML. -->
+  <source src="horror-ambient.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // Countdown is fixed to 28 November 2026.
+  const birthday = new Date('2026-11-28T00:00:00');
+  function updateCountdown(){
+    const now = new Date();
+    const diff = Math.max(0, birthday - now);
+    document.getElementById('days').textContent = Math.floor(diff/86400000);
+    document.getElementById('hours').textContent = String(Math.floor(diff/3600000)%24).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(Math.floor(diff/60000)%60).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(Math.floor(diff/1000)%60).padStart(2,'0');
+    document.getElementById('day').textContent = String(now.getDate()).padStart(2,'0');
+    document.getElementById('calendarText').textContent = now.toLocaleDateString('en-US',{weekday:'long'});
+  }
+  updateCountdown(); setInterval(updateCountdown,1000);
+
+  const audio = document.getElementById('ambient');
+  const soundBtn = document.getElementById('soundBtn');
+  let soundOn = false;
+  soundBtn.addEventListener('click', async()=>{
+    if(!soundOn){
+      try{ await audio.play(); soundOn=true; soundBtn.textContent='🔇 Sound Off'; }
+      catch(e){ document.getElementById('status').textContent='Add horror-ambient.mp3 beside this HTML to enable ambient sound.'; }
+    }else{audio.pause();soundOn=false;soundBtn.textContent='🔊 Sound On';}
+  });
+
+  document.getElementById('revealBtn').addEventListener('click',()=>{
+    document.getElementById('reveal').classList.toggle('show');
+    document.getElementById('status').textContent='Surprise revealed… Happy almost-birthday, Madam! 🕯️';
+    if(!soundOn){ audio.play().then(()=>{soundOn=true;soundBtn.textContent='🔇 Sound Off';}).catch(()=>{}); }
+  });
+</script>
+</body>
+</html>
